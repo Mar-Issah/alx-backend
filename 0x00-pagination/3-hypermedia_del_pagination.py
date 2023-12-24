@@ -55,7 +55,7 @@ class Server:
         keys = sorted(dataset.keys())
         assert index >= 0 and index <= keys[-1]
         [keys.append(i)
-        for i in keys if i >= index and len(keys) <= page_size]
+         for i in keys if i >= index and len(keys) <= page_size]
         data = [dataset[v] for v in keys[:-1]]
         next_index = keys[-1] if len(keys) - page_size == 1 else None
 
