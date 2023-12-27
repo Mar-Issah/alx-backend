@@ -1,6 +1,6 @@
 # ALX Backend
 
-ALX_Africa | Holberton school specialization programme
+ALX_Africa | Holberton School specialization programme
 
 ![Repo size](https://img.shields.io/github/repo-size/Mar-Issah/alx-backend)
 ![Repo License](https://img.shields.io/github/license/Mar-Issah/alx-backend.svg)
