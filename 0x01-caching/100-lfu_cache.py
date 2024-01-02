@@ -1,12 +1,12 @@
 #!/usr/bin/python3
-"""FIFO Cache Replacement Implementation Class
+"""lFU Cache Replacement Implementation Class
 """
 from threading import RLock
 
 BaseCaching = __import__('base_caching').BaseCaching
 
 
-class LRUCache(BaseCaching):
+class LFUCache(BaseCaching):
     """
     An implementation of FIFO(First In Fisrt Out) Cache
 

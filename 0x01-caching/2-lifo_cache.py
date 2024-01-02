@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-"""FIFO Cache Replacement Implementation Class
+"""LIFO Cache Replacement Implementation Class
 """
 from threading import RLock
 
