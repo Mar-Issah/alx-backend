@@ -6,7 +6,7 @@ from threading import RLock
 BaseCaching = __import__('base_caching').BaseCaching
 
 
-class LIFOCache(BaseCaching):
+class LRUCache(BaseCaching):
     """
     An implementation of FIFO(First In Fisrt Out) Cache
 
