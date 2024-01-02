@@ -11,14 +11,14 @@ class LFUCache(BaseCaching):
     An implementation of FIFO(First In Fisrt Out) Cache
 
     Attributes:
-        __keys (list): Stores cache keys
+        __stats (dict): Stores cache keys
         __rlock (RLock): Lock accessed resources
     """
     def __init__(self):
         """ Instantiation method, sets instance attributes
         """
         super().__init__()
-        self.__keys = []
+        self.__stats = {}
         self.__rlock = RLock()
 
     def put(self, key, item):
@@ -42,7 +42,10 @@ class LFUCache(BaseCaching):
             key: key of the dict item
         """
         with self.__rlock:
-            return self.cache_data.get(key, None)
+            value = self.cache_data.get(key, None)
+            if key in self.__stats:
+                self.__stats[key] += 1
+        return value
 
     def _cacheUpdate(self, key_in):
         """ Method to handle cache size and eviction"""
