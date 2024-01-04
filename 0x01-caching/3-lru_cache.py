@@ -54,9 +54,9 @@ class LRUCache(BaseCaching):
             keysLength = len(self.__keys)
             if key_in not in self.__keys:
                 if len(self.cache_data) == BaseCaching.MAX_ITEMS:
-                    keyOut = self.__keys.pop(0)
-                    self.cache_data.pop(keyOut)
+                    key_out = self.__keys.pop(0)
+                    self.cache_data.pop(key_out)
             else:
                 self.__keys.remove(key_in)
             self.__keys.insert(keysLength, key_in)
-        return keyOut
+        return key_out
