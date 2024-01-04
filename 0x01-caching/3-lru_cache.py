@@ -29,7 +29,7 @@ class LRUCache(BaseCaching):
             item: value to be added
         """
         if key is not None and item is not None:
-            key_out = self._cacheUpdate(key)
+            key_out = self.__cacheUpdate(key)
             with self.__rlock:
                 self.cache_data.update({key: item})
             if key_out is not None:
@@ -42,9 +42,12 @@ class LRUCache(BaseCaching):
             key: key of the dict item
         """
         with self.__rlock:
-            return self.cache_data.get(key, None)
+            value = self.cache_data.get(key, None)
+            if key in self.__keys:
+                self.__cacheUpdate(key)
+        return value
 
-    def _cacheUpdate(self, key_in):
+    def __cacheUpdate(self, key_in):
         """ Method to handle cache size and eviction"""
         key_out = None
         with self.__rlock:
