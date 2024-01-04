@@ -1,6 +1,5 @@
 #!/usr/bin/python3
-"""MRU Cache Replacement Implementation Class
-"""
+"""MRU Cache Class"""
 from threading import RLock
 
 BaseCaching = __import__('base_caching').BaseCaching
@@ -8,7 +7,7 @@ BaseCaching = __import__('base_caching').BaseCaching
 
 class MRUCache(BaseCaching):
     """
-    An implementation of FIFO(First In Fisrt Out) Cache
+    An implementation of MRU Cache
 
     Attributes:
         __keys (list): Stores cache keys
@@ -29,16 +28,16 @@ class MRUCache(BaseCaching):
             item: value to be added
         """
         if key is not None and item is not None:
-            key_out = self._cacheUpdate(key)
+            keyOut = self.__cacheUpdate(key)
             with self.__rlock:
                 self.cache_data.update({key: item})
-            if key_out is not None:
-                print('DISCARD: {}'.format(key_out))
+            if keyOut is not None:
+                print('DISCARD: {}'.format(keyOut))
 
     def get(self, key):
         """ Get an item by key
 
-         Args:
+        Args:
             key: key of the dict item
         """
         with self.__rlock:
@@ -47,17 +46,17 @@ class MRUCache(BaseCaching):
                 self.__cacheUpdate(key)
         return value
 
-    def __cacheUpdate(self, key_in):
-        """ Method to handle cache size and eviction"""
-        key_out = None
+    def __cacheUpdate(self, keyIn):
+        """ Removes the earliest item from the cache at MAX size
+        """
+        keyOut = None
         with self.__rlock:
-            if key_in not in self.__keys:
-                keysLength = len(self.__keys)
+            keysLength = len(self.__keys)
+            if keyIn not in self.__keys:
                 if len(self.cache_data) == BaseCaching.MAX_ITEMS:
-                    key_out = self.__keys.pop(0)
-                    self.cache_data.pop(key_out)
-                self.__keys.insert(keysLength, key_in)
+                    keyOut = self.__keys.pop(keysLength - 1)
+                    self.cache_data.pop(keyOut)
             else:
-                self.__keys.remove(key_in)
-            self.__keys.insert(keysLength, key_in)
-        return key_out
+                self.__keys.remove(keyIn)
+            self.__keys.insert(keysLength, keyIn)
+        return keyOut
