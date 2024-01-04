@@ -1,6 +1,5 @@
 #!/usr/bin/python3
-"""lFU Cache Replacement Implementation Class
-"""
+"""LFU Cache Class"""
 from threading import RLock
 
 BaseCaching = __import__('base_caching').BaseCaching
@@ -8,17 +7,17 @@ BaseCaching = __import__('base_caching').BaseCaching
 
 class LFUCache(BaseCaching):
     """
-    An implementation of FIFO(First In Fisrt Out) Cache
+    An implementaion of LFUCache
 
     Attributes:
-        __stats (dict): Stores cache keys
+        __cache_keys (list): A dictionary of cache keys
         __rlock (RLock): Lock accessed resources
     """
+
     def __init__(self):
-        """ Instantiation method, sets instance attributes
-        """
+        """ Instantiation method"""
         super().__init__()
-        self.__stats = {}
+        self.__cache_keys = {}
         self.__rlock = RLock()
 
     def put(self, key, item):
@@ -38,23 +37,23 @@ class LFUCache(BaseCaching):
     def get(self, key):
         """ Get an item by key
 
-         Args:
+        Args:
             key: key of the dict item
         """
         with self.__rlock:
             value = self.cache_data.get(key, None)
-            if key in self.__stats:
-                self.__stats[key] += 1
+            if key in self.__cache_keys:
+                self.__cache_keys[key] += 1
         return value
 
     def _cacheUpdate(self, key_in):
-        """ Method to handle cache size and eviction"""
+        """ Method to handle cache size and eviction """
         key_out = None
         with self.__rlock:
-            if key_in not in self.__stats:
+            if key_in not in self.__cache_keys:
                 if len(self.cache_data) == BaseCaching.MAX_ITEMS:
-                    keyOut = min(self.__stats, key=self.__stats.get)
-                    self.cache_data.pop(keyOut)
-                    self.__stats.pop(keyOut)
-            self.__stats[key_in] = self.__stats.get(key_in, 0) + 1
-        return keyOut
+                    key_out = min(self.__cache_keys, key=self.__cache_keys.get)
+                    self.cache_data.pop(key_out)
+                    self.__cache_keys.pop(key_out)
+            self.__cache_keys[key_in] = self.__cache_keys.get(key_in, 0) + 1
+        return key_out
