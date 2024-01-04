@@ -42,9 +42,12 @@ class MRUCache(BaseCaching):
             key: key of the dict item
         """
         with self.__rlock:
-            return self.cache_data.get(key, None)
+            value = self.cache_data.get(key, None)
+            if key in self.__keys:
+                self.__cacheUpdate(key)
+        return value
 
-    def _cacheUpdate(self, key_in):
+    def __cacheUpdate(self, key_in):
         """ Method to handle cache size and eviction"""
         key_out = None
         with self.__rlock:
