@@ -51,13 +51,12 @@ class LRUCache(BaseCaching):
         """ Method to handle cache size and eviction"""
         key_out = None
         with self.__rlock:
+            keysLength = len(self.__keys)
             if key_in not in self.__keys:
-                keysLength = len(self.__keys)
                 if len(self.cache_data) == BaseCaching.MAX_ITEMS:
-                    key_out = self.__keys.pop(0)
-                    self.cache_data.pop(key_out)
-                self.__keys.insert(keysLength, key_in)
+                    keyOut = self.__keys.pop(0)
+                    self.cache_data.pop(keyOut)
             else:
                 self.__keys.remove(key_in)
             self.__keys.insert(keysLength, key_in)
-        return key_out
+        return keyOut
