@@ -11,6 +11,7 @@ from flask_babel import Babel
 # Instantiate the application object
 app = Flask(__name__)
 
+
 class Config(object):
     """
     Application configuration class

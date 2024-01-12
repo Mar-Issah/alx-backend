@@ -10,6 +10,7 @@ from flask_babel import Babel
 
 app = Flask(__name__)
 
+
 class Config(object):
     """
     Application configuration class
@@ -23,6 +24,7 @@ app.config.from_object(Config)
 
 # Wrap the application with Babel
 babel = Babel(app)
+
 
 @babel.localeselector
 def get_locale() -> str:
