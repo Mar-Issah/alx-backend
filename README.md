@@ -9,3 +9,4 @@ ALX_Africa | Holberton School Specialization programme
 ## Projects
 
 - 0x00-pagination
+- 0x01-caching
