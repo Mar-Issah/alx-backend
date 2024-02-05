@@ -1,6 +1,6 @@
 #!/usr/bin/node
 /**
- * Can I have a seat
+ * 100-seat
  */
 import { promisify } from 'util';
 import { createClient } from 'redis';
@@ -27,32 +27,34 @@ const queue = createQueue();
 
 const app = express();
 
-app.get('/available_seats', (req, res) => {
+app.get('/available_seats', (req, response) => {
   getCurrentAvailableSeats()
     .then((seats) => {
-      res.json({ numberOfAvailableSeats: seats });
+      response.json({ numberOfAvailableSeats: seats });
     })
     .catch((err) => {
       console.log(err);
-      res.status(500).json(null);
+      response.status(500).json(null);
     });
 });
 
-app.get('/reserve_seat', (req, res) => { /* eslint-disable-line consistent-return */
+app.get('/reserve_seat', (req, response) => {
+  /* eslint-disable-line consistent-return */
   if (reservationEnabled === false) {
     return res.json({ status: 'Reservation are blocked' });
   }
   const job = queue.create('reserve_seat', { task: 'reserve a seat' });
   job
-    .on('complete', (status) => { /* eslint-disable-line no-unused-vars */
+    .on('complete', (status) => {
+      /* eslint-disable-line no-unused-vars */
       console.log(`Seat reservation job ${job.id} completed`);
     })
     .on('failed', (err) => {
       console.log(`Seat reservation job ${job.id} failed: ${err.message || err.toString()}`);
     })
     .save((err) => {
-      if (err) return res.json({ status: 'Reservation failed' });
-      return res.json({ status: 'Reservation in process' });
+      if (err) return response.json({ status: 'Reservation failed' });
+      return response.json({ status: 'Reservation in process' });
     });
 });
 
