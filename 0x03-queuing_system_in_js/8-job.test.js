@@ -1,6 +1,6 @@
 #!/usr/bin/node
 /**
- * Writing the test for job creation
+ * Tests for job creation
  */
 import { createQueue } from 'kue';
 import chai from 'chai';
@@ -33,16 +33,16 @@ describe('createPushNotificationsJobs', () => {
   });
 
   after(() => {
-    queue.testMode.exit()
+    queue.testMode.exit();
+  });
+
+  it('throws if queue is not a valid kue', function () {
+    expect(() => createPushNotificationsJobs(jobs, '')).to.throw();
   });
 
   it('display a error message if jobs is not an array', () => {
     expect(() => createPushNotificationsJobs(1, queue)).to.throw();
     expect(() => createPushNotificationsJobs(1, queue)).to.throw(/Jobs is not an array/);
-  });
-
-  it('throws if queue is not a valid kue', function() {
-    expect(() => createPushNotificationsJobs(jobs, "")).to.throw();
   });
 
   it('test the creation of jobs', () => {
@@ -53,16 +53,6 @@ describe('createPushNotificationsJobs', () => {
     expect(console.log.calledOnceWith(`Notification job created: ${queue.testMode.jobs[0].id}`)).to.be.true;
   });
 
-  it('test job progress event report', (done) => {
-    createPushNotificationsJobs(jobs, queue);
-    queue.testMode.jobs[0].addListener('progress', () => {
-      const id = queue.testMode.jobs[0].id;
-      expect(console.log.calledWith(`Notification job ${id} 50% complete`)).to.be.true;
-      done();
-    });
-    queue.testMode.jobs[0].emit('progress', 50, 100);
-  });
-
   it('test job failed event report', (done) => {
     createPushNotificationsJobs(jobs, queue);
     queue.testMode.jobs[0].addListener('failed', () => {
@@ -71,6 +61,15 @@ describe('createPushNotificationsJobs', () => {
       done();
     });
     queue.testMode.jobs[0].emit('failed', new Error('job failed!'));
+  });
+  it('test job progress event report', (done) => {
+    createPushNotificationsJobs(jobs, queue);
+    queue.testMode.jobs[0].addListener('progress', () => {
+      const id = queue.testMode.jobs[0].id;
+      expect(console.log.calledWith(`Notification job ${id} 50% complete`)).to.be.true;
+      done();
+    });
+    queue.testMode.jobs[0].emit('progress', 50, 100);
   });
 
   it('test job completed event report', (done) => {
